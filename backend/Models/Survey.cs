@@ -4,6 +4,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace backend.Models;
 
+[BsonIgnoreExtraElements]
 public class Survey
 {
     [BsonId]
@@ -19,8 +20,8 @@ public class Survey
     [BsonElement("username")]
     public string UserName { get; set; } = string.Empty;
 
-    [BsonElement("accountName")]
-    public string AccountName { get; set; } = string.Empty;
+    [BsonElement("accountantName")]
+    public string AccountantName { get; set; } = string.Empty;
 
     [BsonElement("businessName")]
     public string BusinessName { get; set; } = string.Empty;

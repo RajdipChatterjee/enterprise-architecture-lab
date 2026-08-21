@@ -18,18 +18,11 @@ public class SurveysController : ControllerBase
 
     // GET: api/surveys?page=1&pageSize=15&status=Active
     [HttpGet]
-    public async Task<IActionResult> GetAll(
-        [FromQuery] SurveyFilterDto filter)
+    public async Task<IActionResult> GetAll([FromQuery] SurveyFilterDto filter)
     {
         var result = await _surveyService.GetAllAsync(filter);
 
-        return Ok(
-            new ApiResponseDto<PaginatedResponseDto<SurveyResponseDto>>(
-                true,
-                "Surveys retrieved successfully",
-                result
-            )
-        );
+        return Ok(new ApiResponseDto<PaginatedResponseDto<SurveyResponseDto>>(true, "Surveys retrieved successfully", result));
     }
 
     // GET: api/surveys/{id}
@@ -38,35 +31,18 @@ public class SurveysController : ControllerBase
     {
         var survey = await _surveyService.GetByIdAsync(id);
 
-        if (survey == null)
-        {
-            return NotFound(
-                new ApiResponseDto<object>(
-                    false,
-                    "Survey not found"
-                )
-            );
-        }
+        if (survey == null) return NotFound(new ApiResponseDto<object>(false, "Survey not found"));
 
-        return Ok(
-            new ApiResponseDto<SurveyResponseDto>(
-                true,
-                "Survey retrieved successfully",
-                survey
-            )
-        );
+        return Ok(new ApiResponseDto<SurveyResponseDto>(true, "Survey retrieved successfully", survey));
     }
 
     // POST: api/surveys
     [HttpPost]
-    public async Task<IActionResult> Create(
-        [FromBody] CreateSurveyDto request)
+    public async Task<IActionResult> Create([FromBody] CreateSurveyDto request)
     {
         var survey = await _surveyService.CreateAsync(request);
 
-        return CreatedAtAction(
-            nameof(GetById),
-            new { id = survey.Id },
+        return CreatedAtAction(nameof(GetById), new { id = survey.Id },
             new ApiResponseDto<SurveyResponseDto>(
                 true,
                 "Survey created successfully",
@@ -77,9 +53,7 @@ public class SurveysController : ControllerBase
 
     // PUT: api/surveys/{id}
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(
-        string id,
-        [FromBody] UpdateSurveyDto request)
+    public async Task<IActionResult> Update(string id, [FromBody] UpdateSurveyDto request)
     {
         var survey = await _surveyService.UpdateAsync(id, request);
 
@@ -109,21 +83,8 @@ public class SurveysController : ControllerBase
     {
         var deleted = await _surveyService.DeleteAsync(id);
 
-        if (!deleted)
-        {
-            return NotFound(
-                new ApiResponseDto<object>(
-                    false,
-                    "Survey not found"
-                )
-            );
-        }
+        if (!deleted) return NotFound(new ApiResponseDto<object>(false, "Survey not found"));
 
-        return Ok(
-            new ApiResponseDto<object>(
-                true,
-                "Survey deleted successfully"
-            )
-        );
+        return Ok(new ApiResponseDto<object>(true, "Survey deleted successfully"));
     }
 }

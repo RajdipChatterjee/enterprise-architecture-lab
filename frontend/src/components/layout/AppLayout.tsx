@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { makeStyles } from "@fluentui/react-components";
+import { Outlet } from "react-router-dom";
 import { Header } from "./Header";
 import { Sidebar } from "./Sidebar";
-import { Routes } from "react-router-dom";
 
 const useStyles = makeStyles({
   app: {
-    height: "100vh",
+    height: "100%",
     display: "flex",
     flexDirection: "column",
     overflow: "hidden",
@@ -15,17 +15,6 @@ const useStyles = makeStyles({
   body: {
     flexGrow: 1,
     display: "flex",
-    overflow: "hidden",
-  },
-
-  sidebar: {
-    width: "220px",
-    flexShrink: 0,
-    overflow: "hidden",
-  },
-
-  sidebarClosed: {
-    width: "0",
     overflow: "hidden",
   },
 
@@ -41,20 +30,22 @@ export function AppLayout() {
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen((previous) => !previous);
+  };
+
   return (
     <div className={styles.app}>
-      <Header onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} />
+      <Header onMenuClick={toggleSidebar} />
 
       <div className={styles.body}>
-        <div className={isSidebarOpen ? styles.sidebar : styles.sidebarClosed}>
-          <Sidebar
-            isOpen={isSidebarOpen}
-            onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
-          />
-        </div>
+        <Sidebar
+          isOpen={isSidebarOpen}
+          onToggle={toggleSidebar}
+        />
 
         <main className={styles.content}>
-          <Routes>{/* Pages go here */}</Routes>
+          <Outlet />
         </main>
       </div>
     </div>

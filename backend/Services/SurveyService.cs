@@ -46,7 +46,7 @@ public class SurveyService : ISurveyService
             Rating = request.Rating,
             Feedback = request.Feedback,
             UserName = request.UserName,
-            AccountName = request.AccountName,
+            AccountantName = request.AccountantName,
             BusinessName = request.BusinessName,
             Status = request.Status,
             CreatedAt = DateTime.UtcNow,
@@ -68,7 +68,7 @@ public class SurveyService : ISurveyService
             Rating = request.Rating,
             Feedback = request.Feedback,
             UserName = request.UserName,
-            AccountName = request.AccountName,
+            AccountantName = request.AccountantName,
             BusinessName = request.BusinessName,
             Status = request.Status
         };
@@ -87,8 +87,7 @@ public class SurveyService : ISurveyService
         return await _surveyRepository.SoftDeleteAsync(id);
     }
 
-    private static SurveyResponseDto MapToResponseDto(
-        Survey survey)
+    private static SurveyResponseDto MapToResponseDto(Survey survey)
     {
         return new SurveyResponseDto
         {
@@ -96,7 +95,7 @@ public class SurveyService : ISurveyService
             Rating = survey.Rating,
             Feedback = survey.Feedback,
             UserName = survey.UserName,
-            AccountName = survey.AccountName,
+            AccountantName = survey.AccountantName,
             BusinessName = survey.BusinessName,
             Status = survey.Status,
             CreatedAt = survey.CreatedAt

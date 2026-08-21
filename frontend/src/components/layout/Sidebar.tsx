@@ -6,6 +6,8 @@ import {
   NavItem,
   NavSectionHeader,
   Tooltip,
+  makeStyles,
+  mergeClasses,
 } from "@fluentui/react-components";
 
 import { Home20Regular, ClipboardTask20Regular } from "@fluentui/react-icons";
@@ -15,16 +17,33 @@ interface SidebarProps {
   onToggle: () => void;
 }
 
+const useStyles = makeStyles({
+  drawer: {
+    height: "100%",
+    transitionProperty: "width",
+    transitionDuration: "0.2s",
+    transitionTimingFunction: "ease",
+    overflow: "hidden",
+  },
+  open: {
+    width: "220px",
+  },
+  closed: {
+    width: "50px",
+  },
+});
+
 export function Sidebar({ isOpen, onToggle }: SidebarProps) {
+  const styles = useStyles();
+
   return (
     <NavDrawer
       open={isOpen}
       type="inline"
-      style={{
-        width: isOpen ? "220px" : "50px",
-        transition: "width 0.2s ease",
-        overflow: "hidden",
-      }}
+      className={mergeClasses(
+        styles.drawer,
+        isOpen ? styles.open : styles.closed
+      )}
     >
       <NavDrawerHeader>
         <Tooltip content="Toggle sidebar" relationship="label">

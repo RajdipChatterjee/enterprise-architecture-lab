@@ -6,7 +6,6 @@ using backend.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace backend.Repositories;
 
@@ -14,19 +13,12 @@ public class SurveyRepository : ISurveyRepository
 {
     private readonly IMongoCollection<Survey> _surveys;
 
-    public SurveyRepository(
-        IOptions<MongoDbSettings> mongoSettings)
+    public SurveyRepository(IOptions<MongoDbSettings> mongoSettings)
     {
         var settings = mongoSettings.Value;
-
-        var client = new MongoClient(
-            settings.ConnectionString);
-
-        var database = client.GetDatabase(
-            settings.Database);
-
-        _surveys = database.GetCollection<Survey>(
-            settings.SurveyCollection);
+        var client = new MongoClient(settings.ConnectionString);
+        var database = client.GetDatabase(settings.Database);
+        _surveys = database.GetCollection<Survey>(settings.SurveyCollection);
     }
 
     public async Task<PaginatedResponseDto<Survey>> GetAllAsync(
@@ -35,23 +27,18 @@ public class SurveyRepository : ISurveyRepository
         var filterBuilder = Builders<Survey>.Filter;
 
         // Always exclude soft-deleted surveys
-        var mongoFilter =
-            filterBuilder.Eq(x => x.IsDeleted, false);
+        var mongoFilter = filterBuilder.Eq(x => x.IsDeleted, false);
 
         // Status filter
         if (filter.Status.HasValue)
         {
-            mongoFilter &= filterBuilder.Eq(
-                x => x.Status,
-                filter.Status.Value);
+            mongoFilter &= filterBuilder.Eq(x => x.Status, filter.Status.Value);
         }
 
         // Rating filter
         if (filter.Rating.HasValue)
         {
-            mongoFilter &= filterBuilder.Eq(
-                x => x.Rating,
-                filter.Rating.Value);
+            mongoFilter &= filterBuilder.Eq(x => x.Rating, filter.Rating.Value);
         }
 
         // Username filter
@@ -64,13 +51,13 @@ public class SurveyRepository : ISurveyRepository
                     "i"));
         }
 
-        // Account name filter
-        if (!string.IsNullOrWhiteSpace(filter.AccountName))
+        // Accountant name filter
+        if (!string.IsNullOrWhiteSpace(filter.AccountantName))
         {
             mongoFilter &= filterBuilder.Regex(
-                x => x.AccountName,
+                x => x.AccountantName,
                 new BsonRegularExpression(
-                    filter.AccountName,
+                    filter.AccountantName,
                     "i"));
         }
 
@@ -97,7 +84,7 @@ public class SurveyRepository : ISurveyRepository
                     searchRegex),
 
                 filterBuilder.Regex(
-                    x => x.AccountName,
+                    x => x.AccountantName,
                     searchRegex),
 
                 filterBuilder.Regex(
@@ -204,7 +191,7 @@ public class SurveyRepository : ISurveyRepository
             .Set(x => x.Rating, survey.Rating)
             .Set(x => x.Feedback, survey.Feedback)
             .Set(x => x.UserName, survey.UserName)
-            .Set(x => x.AccountName, survey.AccountName)
+            .Set(x => x.AccountantName, survey.AccountantName)
             .Set(x => x.BusinessName, survey.BusinessName)
             .Set(x => x.Status, survey.Status);
 
