@@ -17,7 +17,7 @@ public class Survey
     [BsonElement("feedback")]
     public string Feedback { get; set; } = string.Empty;
 
-    [BsonElement("username")]
+    [BsonElement("username"),BsonIgnoreIfNull]
     public string UserName { get; set; } = string.Empty;
 
     [BsonElement("accountantName")]
@@ -34,7 +34,7 @@ public class Survey
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     // Soft Delete
-    [BsonElement("isDeleted")]
+    [BsonElement("isDeleted"),BsonIgnoreIfDefault]
     public bool IsDeleted { get; set; } = false;
 
     [BsonElement("deletedAt")]
