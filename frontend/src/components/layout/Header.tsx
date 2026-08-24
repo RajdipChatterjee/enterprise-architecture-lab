@@ -1,8 +1,4 @@
-import {
-  Button,
-  Input,
-  makeStyles,
-} from "@fluentui/react-components";
+import { Button, Input, makeStyles } from "@fluentui/react-components";
 
 import {
   Navigation24Regular,
@@ -63,7 +59,6 @@ export function Header({ onMenuClick }: HeaderProps) {
 
   return (
     <header className={styles.header}>
-
       {/* Hamburger */}
       <Button
         appearance="transparent"
@@ -73,9 +68,7 @@ export function Header({ onMenuClick }: HeaderProps) {
       />
 
       {/* Title */}
-      <div className={styles.title}>
-        Acting Office 2
-      </div>
+      <div className={styles.title}>Acting Office 2</div>
 
       {/* Search */}
       <Input
@@ -112,7 +105,6 @@ export function Header({ onMenuClick }: HeaderProps) {
           className={styles.actionButton}
         />
       </div>
-
     </header>
   );
 }

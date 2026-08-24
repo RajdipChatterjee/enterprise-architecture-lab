@@ -34,7 +34,7 @@ public class Survey
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     // Soft Delete
-    [BsonElement("isDeleted"),BsonIgnoreIfDefault]
+    [BsonElement("isDeleted")]
     public bool IsDeleted { get; set; } = false;
 
     [BsonElement("deletedAt")]

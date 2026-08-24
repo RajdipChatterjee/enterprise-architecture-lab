@@ -11,12 +11,18 @@ import {
   createTableColumn,
   TableCellLayout,
 } from "@fluentui/react-components";
-import type { Survey } from "../../../types/survey";
+import type { Survey, SurveyParams } from "../../../types/survey";
 import { getSurveys } from "../../../api/surveyApi";
 import { useEffect } from "react";
 
+
 interface SurveyTableProps {
   refreshKey: number;
+  page: number;
+  pageSize: number;
+  onTotalPagesChange: (totalPages: number) => void;
+  search?: string;
+  filters?: Partial<SurveyParams>;
 }
 
 const getColumns = (items: Survey[]): TableColumnDefinition<Survey>[] => [
@@ -110,27 +116,43 @@ const getColumns = (items: Survey[]): TableColumnDefinition<Survey>[] => [
   }),
 ];
 
-export function SurveyTable({ refreshKey }: SurveyTableProps) {
+export function SurveyTable({
+  refreshKey,
+  page,
+  pageSize,
+  onTotalPagesChange,
+  search,
+  filters,
+}: SurveyTableProps) {
   const [items, setItems] = React.useState<Survey[]>([]);
 
   const columns = React.useMemo(() => getColumns(items), [items]);
 
   useEffect(() => {
     const fetchSurveys = async () => {
-      const response = await getSurveys();
+      const response = await getSurveys({
+        page,
+        pageSize,
+        search,
+        ...filters,
+      });
 
       setItems(response.data.items);
+
+      const totalPages = Math.ceil(response.data.totalCount / pageSize);
+
+      onTotalPagesChange(totalPages);
     };
 
     fetchSurveys();
-  }, [refreshKey]);
+  }, [refreshKey, page, pageSize, search, filters, onTotalPagesChange]);
 
   return (
     <DataGrid
       items={items}
       columns={columns}
       sortable
-      selectionMode="multiselect"
+      // selectionMode="multiselect"
       getRowId={(item) => item.id}
       focusMode="composite"
       style={{ minWidth: "550px" }}
