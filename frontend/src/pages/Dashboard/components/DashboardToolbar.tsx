@@ -52,6 +52,7 @@ const CRITERIA_OPTIONS: FilterOption[] = [
 const STATUS_OPTIONS: FilterOption[] = [
   { key: "Active", label: "Active" },
   { key: "Inactive", label: "Inactive" },
+  { key: "Pending", label: "Pending" },
   { key: "Completed", label: "Completed" },
 ];
 

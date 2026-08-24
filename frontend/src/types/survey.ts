@@ -1,4 +1,13 @@
-export type SurveyStatus = "Active" | "Inactive" | "Completed";
+// export type SurveyStatus = "Active" | "Inactive" | "Completed";
+
+export enum SurveyStatus
+{
+    Unknown ,
+    Active,
+    Inactive,
+    Pending,
+    Completed
+}
 
 export interface Survey {
   id: string;

@@ -5,13 +5,15 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerHeaderTitle,
+  Dropdown,
   Field,
   Input,
+  Option,
   Textarea,
   makeStyles,
 } from "@fluentui/react-components";
 import { Dismiss24Regular, Save24Regular } from "@fluentui/react-icons";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import type { CreateSurveyPayload } from "../../../types/survey";
 import { createSurvey } from "../../../api/surveyApi";
 
@@ -93,7 +95,12 @@ export function SurveyFormDrawer({
 }: SurveyFormDrawerProps) {
   const styles = useStyles();
 
-  const { register, handleSubmit, reset } = useForm<CreateSurveyPayload>();
+  const { register, handleSubmit, reset, control } =
+    useForm<CreateSurveyPayload>({
+      defaultValues: {
+        status: "Active",
+      },
+    });
 
   async function onSubmit(data: CreateSurveyPayload) {
     try {
@@ -109,91 +116,111 @@ export function SurveyFormDrawer({
 
   return (
     <>
-    <Drawer
-    separator
-      position="end"
-      open={open}
-      onOpenChange={(_, { open }) => onOpenChange(open)}
-      className={styles.drawer}
-    >
-      <DrawerHeader className={styles.header}>
-        <DrawerHeaderTitle
-          action={
-            <Button
-              appearance="subtle"
-              aria-label="Close"
-              onClick={() => onOpenChange(false)}
-              icon={<Dismiss24Regular />}
-            />
-          }
-        >
-          Add Survey
-        </DrawerHeaderTitle>
-      </DrawerHeader>
-      {/* <Divider /> */}
+      <Drawer
+        separator
+        position="end"
+        open={open}
+        onOpenChange={(_, { open }) => onOpenChange(open)}
+        className={styles.drawer}
+      >
+        <DrawerHeader className={styles.header}>
+          <DrawerHeaderTitle
+            action={
+              <Button
+                appearance="subtle"
+                aria-label="Close"
+                onClick={() => onOpenChange(false)}
+                icon={<Dismiss24Regular />}
+              />
+            }
+          >
+            Add Survey
+          </DrawerHeaderTitle>
+        </DrawerHeader>
+        {/* <Divider /> */}
 
-      <DrawerBody className={styles.body}>
-        <form
-          id="survey-form"
-          className={styles.form}
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <Field label="User Name" className={styles.field}>
-            <Input className={styles.input} {...register("userName")} />
-          </Field>
-          {/* Row 1: [ Rating ] [ User Name ] */}
-          <Field label="Rating" className={styles.field}>
-            <Input
-              type="number"
-              className={styles.input}
-              {...register("rating", {
-                valueAsNumber: true,
-              })}
-            />
-          </Field>
+        <DrawerBody className={styles.body}>
+          <form
+            id="survey-form"
+            className={styles.form}
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            <Field label="User Name" className={styles.field}>
+              <Input className={styles.input} {...register("userName")} />
+            </Field>
+            {/* Row 1: [ Rating ] [ User Name ] */}
+            <Field label="Rating" className={styles.field}>
+              <Input
+                type="number"
+                className={styles.input}
+                {...register("rating", {
+                  valueAsNumber: true,
+                })}
+              />
+            </Field>
 
-          {/* Row 2: [ Accountant Name ] [ Business Name ] */}
-          <Field label="Accountant Name" className={styles.field}>
-            <Input className={styles.input} {...register("accountantName")} />
-          </Field>
+            {/* Row 2: [ Accountant Name ] [ Business Name ] */}
+            <Field label="Accountant Name" className={styles.field}>
+              <Input className={styles.input} {...register("accountantName")} />
+            </Field>
 
-          <Field label="Business Name" className={styles.field}>
-            <Input className={styles.input} {...register("businessName")} />
-          </Field>
+            <Field label="Business Name" className={styles.field}>
+              <Input className={styles.input} {...register("businessName")} />
+            </Field>
 
-          {/* Row 3: [ Feedback — full width ] */}
-          <Field label="Feedback" className={styles.fullWidthField}>
-            <Textarea
-              rows={4}
-              className={styles.textarea}
-              {...register("feedback")}
-            />
-          </Field>
-        </form>
-      </DrawerBody>
+            <Field label="Status" className={styles.field}>
+              <Controller
+                name="status"
+                control={control}
+                render={({ field }) => (
+                  <Dropdown
+                    value={field.value}
+                    selectedOptions={[field.value]}
+                    onOptionSelect={(_, data) => {
+                      field.onChange(data.optionValue);
+                    }}
+                  >
+                    <Option value="Active">Active</Option>
+                    <Option value="Inactive">Inactive</Option>
+                    <Option value="Pending">Pending</Option>
+                    <Option value="Completed">Completed</Option>
+                  </Dropdown>
+                )}
+              />
+            </Field>
 
-      {/* <Divider /> */}
-      <hr/>
-      <DrawerFooter className={styles.footer} >
+            {/* Row 3: [ Feedback — full width ] */}
+            <Field label="Feedback" className={styles.fullWidthField}>
+              <Textarea
+                rows={4}
+                className={styles.textarea}
+                {...register("feedback")}
+              />
+            </Field>
+          </form>
+        </DrawerBody>
 
-        <Button
-          appearance="outline"
-          onClick={() => onOpenChange(false)}
-          icon={<Dismiss24Regular />}
-          className={styles.cancelButton}
-        >
-          Cancel
-        </Button>
-        <Button
-          type="submit"
-          form="survey-form"
-          icon={<Save24Regular />}
-          className={styles.saveButton}
-        >
-          Save
-        </Button>
-      </DrawerFooter>
-    </Drawer>
+        {/* <Divider /> */}
+        <hr />
+        <DrawerFooter className={styles.footer}>
+          <Button
+            appearance="outline"
+            onClick={() => onOpenChange(false)}
+            icon={<Dismiss24Regular />}
+            className={styles.cancelButton}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            form="survey-form"
+            icon={<Save24Regular />}
+            className={styles.saveButton}
+          >
+            Save
+          </Button>
+        </DrawerFooter>
+      </Drawer>
     </>
   );
 }
