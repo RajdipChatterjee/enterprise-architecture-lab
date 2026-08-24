@@ -16,7 +16,7 @@ import {
 import { EditRegular, DeleteRegular } from "@fluentui/react-icons";
 
 import type { Survey, SurveyParams } from "../../../types/survey";
-import { getSurveys } from "../../../api/surveyApi";
+import { deleteSurvey, getSurveys } from "../../../api/surveyApi";
 import { useEffect } from "react";
 
 interface SurveyTableProps {
@@ -28,12 +28,13 @@ interface SurveyTableProps {
   filters?: Partial<SurveyParams>;
 }
 
-const getColumns = (items: Survey[]): TableColumnDefinition<Survey>[] => [
+const getColumns = (
+  items: Survey[],
+  onDeleteClick: (id: string) => void,
+): TableColumnDefinition<Survey>[] => [
   createTableColumn<Survey>({
     columnId: "sNo",
-
     renderHeaderCell: () => "S.No.",
-
     renderCell: (item) => (
       <TableCellLayout>{items.indexOf(item) + 1}</TableCellLayout>
     ),
@@ -41,21 +42,15 @@ const getColumns = (items: Survey[]): TableColumnDefinition<Survey>[] => [
 
   createTableColumn<Survey>({
     columnId: "userName",
-
     compare: (a, b) => a.userName.localeCompare(b.userName),
-
     renderHeaderCell: () => "User Name",
-
     renderCell: (item) => <TableCellLayout>{item.userName}</TableCellLayout>,
   }),
 
   createTableColumn<Survey>({
     columnId: "accountantName",
-
     compare: (a, b) => a.accountantName.localeCompare(b.accountantName),
-
     renderHeaderCell: () => "Accountant Name",
-
     renderCell: (item) => (
       <TableCellLayout>{item.accountantName}</TableCellLayout>
     ),
@@ -63,11 +58,8 @@ const getColumns = (items: Survey[]): TableColumnDefinition<Survey>[] => [
 
   createTableColumn<Survey>({
     columnId: "businessName",
-
     compare: (a, b) => a.businessName.localeCompare(b.businessName),
-
     renderHeaderCell: () => "Business Name",
-
     renderCell: (item) => (
       <TableCellLayout>{item.businessName}</TableCellLayout>
     ),
@@ -75,42 +67,30 @@ const getColumns = (items: Survey[]): TableColumnDefinition<Survey>[] => [
 
   createTableColumn<Survey>({
     columnId: "rating",
-
     compare: (a, b) => a.rating - b.rating,
-
     renderHeaderCell: () => "Rating",
-
     renderCell: (item) => <TableCellLayout>{item.rating}</TableCellLayout>,
   }),
 
   createTableColumn<Survey>({
     columnId: "feedback",
-
     compare: (a, b) => a.feedback.localeCompare(b.feedback),
-
     renderHeaderCell: () => "Feedback",
-
     renderCell: (item) => <TableCellLayout>{item.feedback}</TableCellLayout>,
   }),
 
   createTableColumn<Survey>({
     columnId: "status",
-
     compare: (a, b) => a.status.localeCompare(b.status),
-
     renderHeaderCell: () => "Status",
-
     renderCell: (item) => <TableCellLayout>{item.status}</TableCellLayout>,
   }),
 
   createTableColumn<Survey>({
     columnId: "createdAt",
-
     compare: (a, b) =>
       new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
-
     renderHeaderCell: () => "Created At",
-
     renderCell: (item) => (
       <TableCellLayout>
         {new Date(item.createdAt).toLocaleDateString()}
@@ -123,7 +103,7 @@ const getColumns = (items: Survey[]): TableColumnDefinition<Survey>[] => [
 
     renderHeaderCell: () => "Actions",
 
-    renderCell: () => (
+    renderCell: (item) => (
       <TableCellLayout>
         <Button
           appearance="subtle"
@@ -135,6 +115,7 @@ const getColumns = (items: Survey[]): TableColumnDefinition<Survey>[] => [
           appearance="subtle"
           icon={<DeleteRegular />}
           aria-label="Delete survey"
+          onClick={() => onDeleteClick(item.id)}
         />
       </TableCellLayout>
     ),
@@ -151,7 +132,15 @@ export function SurveyTable({
 }: SurveyTableProps) {
   const [items, setItems] = React.useState<Survey[]>([]);
 
-  const columns = React.useMemo(() => getColumns(items), [items]);
+  const onDeleteClick = (id: string) => {
+    console.log("Delete clicked:", id);
+    deleteSurvey(id);
+  };
+
+  const columns = React.useMemo(
+    () => getColumns(items, onDeleteClick),
+    [items],
+  );
 
   useEffect(() => {
     const fetchSurveys = async () => {
@@ -176,7 +165,7 @@ export function SurveyTable({
     <DataGrid
       items={items}
       columns={columns}
-      sortable
+      // sortable
       // selectionMode="multiselect"
       getRowId={(item) => item.id}
       focusMode="composite"

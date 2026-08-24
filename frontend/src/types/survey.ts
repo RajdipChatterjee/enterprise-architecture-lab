@@ -11,39 +11,30 @@ export interface Survey {
   createdAt: string;
 }
 
-export interface CreateSurveyPayload {
-  rating: number;
-  feedback: string;
-  userName: string;
-  accountantName: string;
-  businessName: string;
-  status: SurveyStatus;
-}
+export type CreateSurveyPayload = Omit<
+  Survey,
+  "id" | "createdAt"
+>;
 
-export interface UpdateSurveyPayload {
-  rating: number;
-  feedback: string;
-  userName: string;
-  accountantName: string;
-  businessName: string;
-  status: SurveyStatus;
-}
+export type UpdateSurveyPayload = CreateSurveyPayload;
 
-export interface SurveyParams {
+export type SurveyFilterFields = Pick<
+  Survey,
+  | "status"
+  | "rating"
+  | "userName"
+  | "accountantName"
+  | "businessName"
+>;
+
+export type SurveyFilters = Partial<SurveyFilterFields>;
+
+export interface SurveyParams extends SurveyFilters {
   search?: string;
-
-  status?: SurveyStatus;
-  rating?: number;
-  userName?: string;
-  accountantName?: string;
-  businessName?: string;
-
   fromDate?: string;
   toDate?: string;
-
   page?: number;
   pageSize?: number;
-
   sortBy?: string;
   sortDescending?: boolean;
 }
