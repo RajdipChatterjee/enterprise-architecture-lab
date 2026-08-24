@@ -4,7 +4,7 @@ import {
   NavDrawerBody,
   NavDrawerHeader,
   NavItem,
-  NavSectionHeader,
+  // NavSectionHeader,
   Tooltip,
   makeStyles,
   mergeClasses,
@@ -56,7 +56,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
           {isOpen && "Dashboard"}
         </NavItem>
 
-        {isOpen && <NavSectionHeader>Operations</NavSectionHeader>}
+        {/* {isOpen && <NavSectionHeader>Operations</NavSectionHeader>} */}
 
         <NavItem icon={<ClipboardTask20Regular />} value="surveys">
           {isOpen && "Surveys"}

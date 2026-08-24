@@ -10,11 +10,14 @@ import {
   type TableColumnDefinition,
   createTableColumn,
   TableCellLayout,
+  Button,
 } from "@fluentui/react-components";
+
+import { EditRegular, DeleteRegular } from "@fluentui/react-icons";
+
 import type { Survey, SurveyParams } from "../../../types/survey";
 import { getSurveys } from "../../../api/surveyApi";
 import { useEffect } from "react";
-
 
 interface SurveyTableProps {
   refreshKey: number;
@@ -111,6 +114,28 @@ const getColumns = (items: Survey[]): TableColumnDefinition<Survey>[] => [
     renderCell: (item) => (
       <TableCellLayout>
         {new Date(item.createdAt).toLocaleDateString()}
+      </TableCellLayout>
+    ),
+  }),
+
+  createTableColumn<Survey>({
+    columnId: "actions",
+
+    renderHeaderCell: () => "Actions",
+
+    renderCell: () => (
+      <TableCellLayout>
+        <Button
+          appearance="subtle"
+          icon={<EditRegular />}
+          aria-label="Edit survey"
+        />
+
+        <Button
+          appearance="subtle"
+          icon={<DeleteRegular />}
+          aria-label="Delete survey"
+        />
       </TableCellLayout>
     ),
   }),

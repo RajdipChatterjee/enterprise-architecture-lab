@@ -114,7 +114,7 @@ export function DashboardToolbar({
             }
           }}
         >
-          <Button>Status: {statusValue}</Button>
+          <Button shape="circular">Status: {statusValue}</Button>
         </FilterPopover>
 
         <FilterPopover
@@ -133,7 +133,7 @@ export function DashboardToolbar({
             }
           }}
         >
-          <Button icon={<FilterRegular />}>Add Filter</Button>
+          <Button icon={<FilterRegular />} shape="circular">Add Filter</Button>
         </FilterPopover>
       </div>
     </Toolbar>
