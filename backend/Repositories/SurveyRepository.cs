@@ -13,12 +13,15 @@ public class SurveyRepository : ISurveyRepository
 {
     private readonly IMongoCollection<Survey> _surveys;
 
-    public SurveyRepository(IOptions<MongoDbSettings> mongoSettings)
+    public SurveyRepository(IMongoClient mongoClient, IOptions<MongoDbSettings> mongoSettings)
     {
         var settings = mongoSettings.Value;
-        var client = new MongoClient(settings.ConnectionString);
-        var database = client.GetDatabase(settings.Database);
-        _surveys = database.GetCollection<Survey>(settings.SurveyCollection);
+
+        var database = mongoClient.GetDatabase(settings.Database);
+
+        _surveys = database.GetCollection<Survey>(
+            settings.SurveyCollection
+        );
     }
 
     public async Task<PaginatedResponseDto<Survey>> GetAllAsync(

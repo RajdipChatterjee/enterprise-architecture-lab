@@ -4,7 +4,7 @@ namespace backend.DTOs.Survey;
 
 public class SurveyResponseDto
 {
-    public string Id { get; set; } = string.Empty;
+    public string Id { get; set; } = null!;
     public int Rating { get; set; }
     public string Feedback { get; set; } = string.Empty;
     public string UserName { get; set; } = string.Empty;

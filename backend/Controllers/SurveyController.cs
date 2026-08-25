@@ -18,7 +18,7 @@ public class SurveysController : ControllerBase
 
     // GET: api/surveys?page=1&pageSize=15&status=Active
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] SurveyFilterDto filter)
+    public async Task<ActionResult<ApiResponseDto<List<SurveyResponseDto>>>> GetAll([FromQuery] SurveyFilterDto filter)
     {
         var result = await _surveyService.GetAllAsync(filter);
 
@@ -27,7 +27,7 @@ public class SurveysController : ControllerBase
 
     // GET: api/surveys/{id}
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(string id)
+    public async Task<ActionResult<ApiResponseDto<SurveyResponseDto>>> GetById(string id)
     {
         var survey = await _surveyService.GetByIdAsync(id);
 
@@ -38,7 +38,7 @@ public class SurveysController : ControllerBase
 
     // POST: api/surveys
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateSurveyDto request)
+    public async Task<ActionResult<ApiResponseDto<string>>> Create([FromBody] CreateSurveyDto request)
     {
         var survey = await _surveyService.CreateAsync(request);
 
@@ -53,7 +53,7 @@ public class SurveysController : ControllerBase
 
     // PUT: api/surveys/{id}
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(string id, [FromBody] UpdateSurveyDto request)
+    public async Task<ActionResult<ApiResponseDto<string>>> Update(string id, [FromBody] UpdateSurveyDto request)
     {
         var survey = await _surveyService.UpdateAsync(id, request);
 
@@ -79,7 +79,7 @@ public class SurveysController : ControllerBase
     // DELETE: api/surveys/{id}
     // Soft delete
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(string id)
+    public async Task<ActionResult<ApiResponseDto<string>>> Delete(string id)
     {
      
         var deleted = await _surveyService.DeleteAsync(id);

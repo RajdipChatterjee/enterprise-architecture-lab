@@ -2,6 +2,8 @@ using backend.Configuration;
 using backend.Interfaces;
 using backend.Repositories;
 using backend.Services;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +19,15 @@ builder.Services.AddControllers()
 builder.Services.Configure<MongoDbSettings>(
     builder.Configuration.GetSection("MongoDbSettings")
 );
+
+builder.Services.AddSingleton<IMongoClient>(serviceProvider =>
+{
+    var settings = serviceProvider
+        .GetRequiredService<IOptions<MongoDbSettings>>()
+        .Value;
+
+    return new MongoClient(settings.ConnectionString);
+});
 
 builder.Services.AddScoped<ISurveyRepository, SurveyRepository>();
 builder.Services.AddScoped<ISurveyService, SurveyService>();
