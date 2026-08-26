@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { makeStyles, tokens, Text } from "@fluentui/react-components";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { practiceOnboardingSchema } from "./schemas/practiceOnboarding.schema";
 
 import initialPracticeOnboardingData from "./constants/initialPracticeOnboardingData";
 import type { PracticeOnboardingData } from "./types/practiceOnborading.types";
@@ -60,6 +62,7 @@ function OnboardingPage() {
   const styles = useStyles();
 
   const form = useForm<PracticeOnboardingData>({
+    resolver: zodResolver(practiceOnboardingSchema),
     defaultValues: initialPracticeOnboardingData,
   });
 
