@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using backend.Enums;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace backend.Models;
@@ -14,6 +15,11 @@ public class User
     public string Email { get; set; } = null!;
     [BsonElement("passwordHash")]
     public string PasswordHash { get; set; } = null!;
+    [BsonElement("role")]
+    public UserRole Role { get; set; } = UserRole.User;
+    [BsonElement("createdAt")]
+    [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     [BsonElement("refreshTokens")]
-    public List<RefreshToken> RefreshTokens { get; set; } = null!;
+    public List<RefreshToken> RefreshTokens { get; set; } = [];
 }

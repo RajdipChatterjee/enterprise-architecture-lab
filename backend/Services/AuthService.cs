@@ -1,6 +1,6 @@
 ﻿using backend.DTOs.Auth;
-using backend.DTOs.Survey;
 using backend.Interfaces;
+using backend.Mapper;
 using backend.Models;
 
 namespace backend.Services;
@@ -8,52 +8,81 @@ namespace backend.Services;
 public class AuthService : IAuthService
 {
     private readonly IUserRepository _userRepository;
-    public AuthService(IUserRepository userRepository)
+    private readonly ITokenService _tokenService;
+    public AuthService(IUserRepository userRepository, ITokenService tokenService)
     {
         _userRepository = userRepository;
+        _tokenService = tokenService;
     }
 
-    public async Task<AuthResponseDto> LoginUserAsync(LoginUserDto user)
+    public async Task<AuthResultDto> LoginUserAsync(LoginUserDto user)
     {
-        try
-        {
-            var result = await _userRepository.GetByUsernameOrEmailAsync(user.UsernameOrEmail);
-            return MapToResponseDto(result);
-        }
-        catch(Exception ex)
-        {
-            throw new Exception(ex.Message);
-        }
-    }
+        var userFromDb = await _userRepository.GetByUsernameOrEmailAsync(user.UsernameOrEmail);
 
-    public async Task<AuthResponseDto> RegisterUserAsync(RegisterUserDto user)
-    {
-        try
-        {
-            var result = await _userRepository.CreateAsync(user);
-            return MapToResponseDto(result);
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message);
-        }
-    }
+        if (userFromDb == null || !BCrypt.Net.BCrypt.Verify(user.Password, userFromDb.PasswordHash))
+            throw new UnauthorizedAccessException("Invalid username/email or password.");
 
-    private static AuthResponseDto MapToResponseDto(User user)
-    {
-        return new AuthResponseDto
+        var accessToken = _tokenService.GenerateAccessToken(userFromDb);
+        var refreshToken = _tokenService.GenerateRefreshToken();
+
+        var refreshTokenEntity = new RefreshToken
         {
-           
+            TokenHash = BCrypt.Net.BCrypt.HashPassword(refreshToken),
+            ExpiresAt = DateTime.UtcNow.AddDays(7)
+        };
+
+        await _userRepository.AddRefreshTokenAsync(
+            userFromDb.Id,
+            refreshTokenEntity
+        );
+
+        return new AuthResultDto
+        {
+            User = UserMapper.MapToResponseDto(userFromDb),
+            AccessToken = accessToken,
+            RefreshToken = refreshToken
         };
     }
 
-    private static User MapToUser(RegisterUserDto user)
+    public async Task<AuthResultDto> RegisterUserAsync(RegisterUserDto user)
     {
-        return new User
+        var passwordHash = BCrypt.Net.BCrypt.HashPassword(user.Password);
+        var userToCreate = UserMapper.MapToUser(user, passwordHash);
+
+        var existingUser = await _userRepository.GetByUsernameAsync(userToCreate.Username);
+
+        if (existingUser != null)
+            throw new InvalidOperationException("Username already exists.");
+
+        var existingEmail = await _userRepository.GetByEmailAsync(userToCreate.Email);
+
+        if (existingEmail != null)
+            throw new InvalidOperationException("Email already exists.");
+
+        await _userRepository.CreateAsync(userToCreate);
+
+        var accessToken =
+        _tokenService.GenerateAccessToken(userToCreate);
+
+        var refreshToken =
+            _tokenService.GenerateRefreshToken();
+
+        var refreshTokenEntity = new RefreshToken
         {
-            Username = user.Username,
-            Email = user.Email,
-            //Password = user.Password
+            TokenHash = BCrypt.Net.BCrypt.HashPassword(refreshToken),
+            ExpiresAt = DateTime.UtcNow.AddDays(7)
+        };
+
+        await _userRepository.AddRefreshTokenAsync(
+            userToCreate.Id,
+            refreshTokenEntity
+        );
+
+        return new AuthResultDto
+        {
+            User = UserMapper.MapToResponseDto(userToCreate),
+            AccessToken = accessToken,
+            RefreshToken = refreshToken
         };
     }
 }

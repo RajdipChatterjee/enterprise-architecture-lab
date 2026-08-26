@@ -13,36 +13,43 @@ public class UserRepository : IUserRepository
     public UserRepository(IMongoClient mongoClient, IOptions<MongoDbSettings> mongoSettings)
     {
         var settings = mongoSettings.Value;
-
         var database = mongoClient.GetDatabase(settings.Database);
-
-        _users = database.GetCollection<User>(
-            settings.UserCollection
-        );
+        _users = database.GetCollection<User>(settings.UserCollection);
     }
 
-    public Task CreateAsync(User user)
+    public async Task CreateAsync(User user)
     {
-        throw new NotImplementedException();
+        await _users.InsertOneAsync(user);
     }
 
-    public Task<User?> GetByEmailAsync(string email)
+    public async Task<User?> GetByEmailAsync(string email)
     {
-        throw new NotImplementedException();
+        var user = await _users.Find<User>(u => u.Email == email).FirstOrDefaultAsync();
+        return user;
     }
 
-    public Task<User?> GetByUsernameAsync(string username)
+    public async Task<User?> GetByUsernameAsync(string username)
     {
-        throw new NotImplementedException();
+        var user = await _users.Find<User>(u => u.Username == username).FirstOrDefaultAsync();
+        return user;
     }
 
-    public Task<User?> GetByUsernameOrEmailAsync(string usernameOrEmail)
+    public async Task<User?> GetByUsernameOrEmailAsync(string usernameOrEmail)
     {
-        throw new NotImplementedException();
+        var user = await _users.Find<User>(u => u.Username == usernameOrEmail || u.Email == usernameOrEmail).FirstOrDefaultAsync();
+        return user;
     }
 
-    public Task UpdateAsync(User user)
+    public async Task<bool> AddRefreshTokenAsync(
+    string userId,
+    RefreshToken refreshToken)
     {
-        throw new NotImplementedException();
+        var filter = Builders<User>.Filter.Eq(u => u.Id, userId);
+
+        var update = Builders<User>.Update.Push(u => u.RefreshTokens, refreshToken);
+
+        var result = await _users.UpdateOneAsync(filter, update);
+
+        return result.MatchedCount > 0;
     }
 }

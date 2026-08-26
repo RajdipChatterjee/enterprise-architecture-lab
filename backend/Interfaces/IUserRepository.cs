@@ -12,5 +12,5 @@ public interface IUserRepository
 
     Task CreateAsync(User user);
 
-    Task UpdateAsync(User user);
+    Task<bool> AddRefreshTokenAsync(string userId, RefreshToken refreshToken);
 }
