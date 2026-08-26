@@ -2,7 +2,7 @@ import { Button, makeStyles, tokens, Text } from "@fluentui/react-components";
 import { Checkmark20Regular } from "@fluentui/react-icons";
 import { useFormContext } from "react-hook-form";
 
-import type { PracticeOnboardingData } from "../types/practiceOnborading.types";
+import type { PracticeOnboardingData } from "../types/practiceOnboarding.types";
 
 const useStyles = makeStyles({
   container: {

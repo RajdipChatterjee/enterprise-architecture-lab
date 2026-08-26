@@ -1,8 +1,19 @@
-import { Button, Field, Input, makeStyles, tokens, Text } from "@fluentui/react-components";
-import { ArrowRight20Regular, ArrowUpload24Regular, DocumentCheckmark24Regular } from "@fluentui/react-icons";
+import {
+  Button,
+  Field,
+  Input,
+  makeStyles,
+  tokens,
+  Text,
+} from "@fluentui/react-components";
+import {
+  ArrowRight20Regular,
+  ArrowUpload24Regular,
+  DocumentCheckmark24Regular,
+} from "@fluentui/react-icons";
 import { useFormContext } from "react-hook-form";
 
-import type { PracticeOnboardingData } from "../types/practiceOnborading.types";
+import type { PracticeOnboardingData } from "../types/practiceOnboarding.types";
 
 interface InvoiceEmailStepProps {
   onNext: () => Promise<void>;
@@ -147,7 +158,9 @@ function InvoiceEmailStep({ onNext }: InvoiceEmailStepProps) {
           >
             {invoiceSampleFile ? (
               <>
-                <DocumentCheckmark24Regular color={tokens.colorBrandForeground1} />
+                <DocumentCheckmark24Regular
+                  color={tokens.colorBrandForeground1}
+                />
                 <span className={styles.selectedFileName}>
                   ✓ {invoiceSampleFile.name}
                 </span>
@@ -156,8 +169,12 @@ function InvoiceEmailStep({ onNext }: InvoiceEmailStepProps) {
             ) : (
               <>
                 <ArrowUpload24Regular color={tokens.colorBrandForeground1} />
-                <span className={styles.uploadTitle}>Upload Sample Invoice</span>
-                <span className={styles.uploadHint}>PDF or Image file (max 10MB)</span>
+                <span className={styles.uploadTitle}>
+                  Upload Sample Invoice
+                </span>
+                <span className={styles.uploadHint}>
+                  PDF or Image file (max 10MB)
+                </span>
               </>
             )}
           </label>
@@ -183,9 +200,7 @@ function InvoiceEmailStep({ onNext }: InvoiceEmailStepProps) {
           >
             <Input
               placeholder="e.g. Acro Dental - Official Invoice"
-              {...register("invoiceHeader", {
-                required: "Invoice header is required",
-              })}
+              {...register("invoiceHeader")}
             />
           </Field>
 
@@ -196,9 +211,7 @@ function InvoiceEmailStep({ onNext }: InvoiceEmailStepProps) {
           >
             <Input
               placeholder="e.g. Thank you for choosing Acro Dental!"
-              {...register("invoiceFooter", {
-                required: "Invoice footer is required",
-              })}
+              {...register("invoiceFooter")}
             />
           </Field>
         </div>
@@ -215,9 +228,7 @@ function InvoiceEmailStep({ onNext }: InvoiceEmailStepProps) {
             <Input
               type="email"
               placeholder="billing@example.com"
-              {...register("publicEmail", {
-                required: "Public email is required",
-              })}
+              {...register("publicEmail")}
             />
           </Field>
         </div>

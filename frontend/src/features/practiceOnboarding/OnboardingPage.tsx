@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { practiceOnboardingSchema } from "./schemas/practiceOnboarding.schema";
 
 import initialPracticeOnboardingData from "./constants/initialPracticeOnboardingData";
-import type { PracticeOnboardingData } from "./types/practiceOnborading.types";
+import type { PracticeOnboardingData } from "./types/practiceOnboarding.types";
 
 import PracticeDetailsStep from "./components/PracticeDetailsStep";
 import BrandingStep from "./components/BrandingStep";

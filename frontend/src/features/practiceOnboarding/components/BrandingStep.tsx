@@ -1,8 +1,18 @@
-import { Button, Field, makeStyles, tokens, Text } from "@fluentui/react-components";
-import { ArrowRight20Regular, ArrowUpload24Regular, DocumentCheckmark24Regular } from "@fluentui/react-icons";
+import {
+  Button,
+  Field,
+  makeStyles,
+  tokens,
+  Text,
+} from "@fluentui/react-components";
+import {
+  ArrowRight20Regular,
+  ArrowUpload24Regular,
+  DocumentCheckmark24Regular,
+} from "@fluentui/react-icons";
 import { useFormContext } from "react-hook-form";
 
-import type { PracticeOnboardingData } from "../types/practiceOnborading.types";
+import type { PracticeOnboardingData } from "../types/practiceOnboarding.types";
 
 interface BrandingStepProps {
   onNext: () => Promise<void>;
@@ -133,15 +143,21 @@ function BrandingStep({ onNext }: BrandingStepProps) {
           >
             {logoFile ? (
               <>
-                <DocumentCheckmark24Regular color={tokens.colorBrandForeground1} />
-                <span className={styles.selectedFileName}>✓ {logoFile.name}</span>
+                <DocumentCheckmark24Regular
+                  color={tokens.colorBrandForeground1}
+                />
+                <span className={styles.selectedFileName}>
+                  ✓ {logoFile.name}
+                </span>
                 <span className={styles.uploadHint}>Click to replace file</span>
               </>
             ) : (
               <>
                 <ArrowUpload24Regular color={tokens.colorBrandForeground1} />
                 <span className={styles.uploadTitle}>Upload Logo</span>
-                <span className={styles.uploadHint}>PNG, JPG or SVG (max 5MB)</span>
+                <span className={styles.uploadHint}>
+                  PNG, JPG or SVG (max 5MB)
+                </span>
               </>
             )}
           </label>
@@ -172,15 +188,21 @@ function BrandingStep({ onNext }: BrandingStepProps) {
           >
             {faviconFile ? (
               <>
-                <DocumentCheckmark24Regular color={tokens.colorBrandForeground1} />
-                <span className={styles.selectedFileName}>✓ {faviconFile.name}</span>
+                <DocumentCheckmark24Regular
+                  color={tokens.colorBrandForeground1}
+                />
+                <span className={styles.selectedFileName}>
+                  ✓ {faviconFile.name}
+                </span>
                 <span className={styles.uploadHint}>Click to replace file</span>
               </>
             ) : (
               <>
                 <ArrowUpload24Regular color={tokens.colorBrandForeground1} />
                 <span className={styles.uploadTitle}>Upload Favicon</span>
-                <span className={styles.uploadHint}>ICO, PNG or SVG (max 2MB)</span>
+                <span className={styles.uploadHint}>
+                  ICO, PNG or SVG (max 2MB)
+                </span>
               </>
             )}
           </label>

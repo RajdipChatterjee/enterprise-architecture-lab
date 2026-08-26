@@ -1,8 +1,18 @@
-import { Button, Field, makeStyles, tokens, Text } from "@fluentui/react-components";
-import { ArrowRight20Regular, ArrowUpload20Regular, DocumentCheckmark20Regular } from "@fluentui/react-icons";
+import {
+  Button,
+  Field,
+  makeStyles,
+  tokens,
+  Text,
+} from "@fluentui/react-components";
+import {
+  ArrowRight20Regular,
+  ArrowUpload20Regular,
+  DocumentCheckmark20Regular,
+} from "@fluentui/react-icons";
 import { useFormContext } from "react-hook-form";
 
-import type { PracticeOnboardingData } from "../types/practiceOnborading.types";
+import type { PracticeOnboardingData } from "../types/practiceOnboarding.types";
 
 interface DataConversionStepProps {
   onNext: () => Promise<void>;
@@ -127,7 +137,7 @@ function DataConversionStep({ onNext }: DataConversionStepProps) {
 
   const handleFileChange = (
     field: DataConversionFieldKey,
-    file: File | null
+    file: File | null,
   ) => {
     setValue(`dataConversion.${field}`, file, {
       shouldValidate: true,
@@ -182,7 +192,9 @@ function DataConversionStep({ onNext }: DataConversionStepProps) {
                     selectedFile ? styles.statusTextSelected : ""
                   }`}
                 >
-                  {selectedFile ? `✓ ${selectedFile.name}` : "Click to attach file"}
+                  {selectedFile
+                    ? `✓ ${selectedFile.name}`
+                    : "Click to attach file"}
                 </span>
               </label>
               <input

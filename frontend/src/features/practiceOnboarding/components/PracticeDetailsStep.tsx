@@ -1,8 +1,15 @@
-import { Button, Field, Input, makeStyles, tokens, Text } from "@fluentui/react-components";
+import {
+  Button,
+  Field,
+  Input,
+  makeStyles,
+  tokens,
+  Text,
+} from "@fluentui/react-components";
 import { ArrowRight20Regular } from "@fluentui/react-icons";
 import { useFormContext } from "react-hook-form";
 
-import type { PracticeOnboardingData } from "../types/practiceOnborading.types";
+import type { PracticeOnboardingData } from "../types/practiceOnboarding.types";
 
 interface PracticeDetailsStepProps {
   onNext: () => Promise<void>;
@@ -81,9 +88,7 @@ function PracticeDetailsStep({ onNext }: PracticeDetailsStepProps) {
         >
           <Input
             placeholder="Enter your practice name"
-            {...register("practiceName", {
-              required: "Practice name is required",
-            })}
+            {...register("practiceName")}
           />
         </Field>
 
@@ -94,9 +99,7 @@ function PracticeDetailsStep({ onNext }: PracticeDetailsStepProps) {
         >
           <Input
             placeholder="your-practice"
-            {...register("proposedUrl", {
-              required: "Proposed URL is required",
-            })}
+            {...register("proposedUrl")}
           />
         </Field>
       </div>

@@ -1,8 +1,15 @@
-import { Button, Field, Input, makeStyles, tokens, Text } from "@fluentui/react-components";
+import {
+  Button,
+  Field,
+  Input,
+  makeStyles,
+  tokens,
+  Text,
+} from "@fluentui/react-components";
 import { ArrowRight20Regular } from "@fluentui/react-icons";
 import { useFormContext } from "react-hook-form";
 
-import type { PracticeOnboardingData } from "../types/practiceOnborading.types";
+import type { PracticeOnboardingData } from "../types/practiceOnboarding.types";
 
 interface ContactInformationStepProps {
   onNext: () => Promise<void>;
@@ -94,9 +101,7 @@ function ContactInformationStep({ onNext }: ContactInformationStepProps) {
           >
             <Input
               placeholder="https://example.com"
-              {...register("website", {
-                required: "Website is required",
-              })}
+              {...register("website")}
             />
           </Field>
 
@@ -107,9 +112,7 @@ function ContactInformationStep({ onNext }: ContactInformationStepProps) {
           >
             <Input
               placeholder="+1 (555) 000-0000"
-              {...register("practicePhoneNumber", {
-                required: "Practice phone number is required",
-              })}
+              {...register("practicePhoneNumber")}
             />
           </Field>
         </div>
@@ -125,9 +128,7 @@ function ContactInformationStep({ onNext }: ContactInformationStepProps) {
           >
             <Input
               placeholder="Jane Doe"
-              {...register("contactPersonName", {
-                required: "Contact person name is required",
-              })}
+              {...register("contactPersonName")}
             />
           </Field>
 
@@ -139,9 +140,7 @@ function ContactInformationStep({ onNext }: ContactInformationStepProps) {
             <Input
               type="email"
               placeholder="jane@example.com"
-              {...register("contactPersonEmail", {
-                required: "Contact person email is required",
-              })}
+              {...register("contactPersonEmail")}
             />
           </Field>
 
@@ -152,9 +151,7 @@ function ContactInformationStep({ onNext }: ContactInformationStepProps) {
           >
             <Input
               placeholder="+1 (555) 111-2222"
-              {...register("contactPersonPhoneNumber", {
-                required: "Contact person phone number is required",
-              })}
+              {...register("contactPersonPhoneNumber")}
             />
           </Field>
         </div>
