@@ -41,6 +41,7 @@ builder.Services.AddScoped<ISurveyService, SurveyService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IPracticeRepository, PracticeRepository>();
 builder.Services.AddScoped<IPracticeService, PracticeService>();
+builder.Services.AddScoped<IFileStorageService, LocalFileStorageService>();
 
 var jwtSettings = builder.Configuration
     .GetSection("JwtSettings")
@@ -123,6 +124,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseStaticFiles();
 
 app.UseCors("AllowFrontend");
 

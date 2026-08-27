@@ -1,76 +1,48 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Http;
 
 namespace backend.DTOs.Practice;
 
-public class UpdatePracticeDto
+public class PracticeResponseDto
 {
+    public string Id { get; set; } = null!;
+
     // Basic details
-
-    [StringLength(200)]
-    public string? PracticeName { get; set; }
-
-    [StringLength(200)]
-    public string? ProposedUrl { get; set; }
-
+    public string PracticeName { get; set; } = string.Empty;
+    public string ProposedUrl { get; set; } = string.Empty;
 
     // Branding
-
-    public IFormFile? Logo { get; set; }
-
-    public IFormFile? Favicon { get; set; }
-
+    public string? LogoUrl { get; set; }
+    public string? FaviconUrl { get; set; }
 
     // Contact information
-
-    [Url]
-    [StringLength(500)]
-    public string? Website { get; set; }
-
-    [StringLength(30)]
-    public string? PracticePhoneNumber { get; set; }
-
-    [StringLength(200)]
-    public string? ContactPersonName { get; set; }
-
-    [EmailAddress]
-    [StringLength(320)]
-    public string? ContactPersonEmail { get; set; }
-
-    [StringLength(30)]
-    public string? ContactPersonPhoneNumber { get; set; }
-
+    public string Website { get; set; } = string.Empty;
+    public string PracticePhoneNumber { get; set; } = string.Empty;
+    public string ContactPersonName { get; set; } = string.Empty;
+    public string ContactPersonEmail { get; set; } = string.Empty;
+    public string ContactPersonPhoneNumber { get; set; } = string.Empty;
 
     // Invoice configuration
-
-    public IFormFile? InvoiceSample { get; set; }
-
-    [StringLength(1000)]
-    public string? InvoiceHeader { get; set; }
-
-    [StringLength(2000)]
-    public string? InvoiceFooter { get; set; }
-
-    [EmailAddress]
-    [StringLength(320)]
-    public string? PublicEmail { get; set; }
-
+    public string? InvoiceSampleUrl { get; set; }
+    public string InvoiceHeader { get; set; } = string.Empty;
+    public string InvoiceFooter { get; set; } = string.Empty;
+    public string PublicEmail { get; set; } = string.Empty;
 
     // Data conversion files
+    public DataConversionFilesResponseDto DataConversion { get; set; } = new();
 
-    public IFormFile? Contacts { get; set; }
+    // Metadata
+    public DateTime CreatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
+}
 
-    public IFormFile? Users { get; set; }
-
-    public IFormFile? Receipts { get; set; }
-
-    public IFormFile? Businesses { get; set; }
-
-    public IFormFile? CreditNotes { get; set; }
-
-    public IFormFile? Tasks { get; set; }
-
-    public IFormFile? SubscriptionAndDd { get; set; }
-
-    public IFormFile? Invoices { get; set; }
+public class DataConversionFilesResponseDto
+{
+    public string? ContactsUrl { get; set; }
+    public string? UsersUrl { get; set; }
+    public string? ReceiptsUrl { get; set; }
+    public string? BusinessesUrl { get; set; }
+    public string? CreditNotesUrl { get; set; }
+    public string? TasksUrl { get; set; }
+    public string? SubscriptionAndDdUrl { get; set; }
+    public string? InvoicesUrl { get; set; }
 }

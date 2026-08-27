@@ -8,11 +8,15 @@ namespace backend.Services;
 public class PracticeService : IPracticeService
 {
     private readonly IPracticeRepository _practiceRepository;
+    private readonly IFileStorageService _fileStorageService;
 
     public PracticeService(
-        IPracticeRepository practiceRepository)
+        IPracticeRepository practiceRepository,
+        IFileStorageService fileStorageService
+    )
     {
         _practiceRepository = practiceRepository;
+        _fileStorageService = fileStorageService;
     }
 
     public async Task<PaginatedResponseDto<PracticeResponseDto>> GetAllAsync(
@@ -62,18 +66,70 @@ public class PracticeService : IPracticeService
     }
 
     public async Task<PracticeResponseDto> CreateAsync(
-        CreatePracticeDto request,
-        string ownerUserId)
+    CreatePracticeDto request,
+    string ownerUserId)
     {
         var practice = PracticeMapper.ToPractice(
             request,
             ownerUserId);
 
-        // File upload handling will be added later.
-        //
-        // Example:
-        // practice.LogoUrl =
-        //     await _fileStorageService.UploadAsync(request.Logo);
+        // Branding
+        practice.LogoUrl =
+            await _fileStorageService.UploadAsync(
+                request.Logo,
+                "practices/logos");
+
+        practice.FaviconUrl =
+            await _fileStorageService.UploadAsync(
+                request.Favicon,
+                "practices/favicons");
+
+        // Invoice
+        practice.InvoiceSampleUrl =
+            await _fileStorageService.UploadAsync(
+                request.InvoiceSample,
+                "practices/invoices");
+
+        // Data conversion files
+        practice.DataConversion.ContactsUrl =
+            await _fileStorageService.UploadAsync(
+                request.Contacts,
+                "practices/data-conversion/contacts");
+
+        practice.DataConversion.UsersUrl =
+            await _fileStorageService.UploadAsync(
+                request.Users,
+                "practices/data-conversion/users");
+
+        practice.DataConversion.ReceiptsUrl =
+            await _fileStorageService.UploadAsync(
+                request.Receipts,
+                "practices/data-conversion/receipts");
+
+        practice.DataConversion.BusinessesUrl =
+            await _fileStorageService.UploadAsync(
+                request.Businesses,
+                "practices/data-conversion/businesses");
+
+        practice.DataConversion.CreditNotesUrl =
+            await _fileStorageService.UploadAsync(
+                request.CreditNotes,
+                "practices/data-conversion/credit-notes");
+
+        practice.DataConversion.TasksUrl =
+            await _fileStorageService.UploadAsync(
+                request.Tasks,
+                "practices/data-conversion/tasks");
+
+        practice.DataConversion.SubscriptionAndDdUrl =
+            await _fileStorageService.UploadAsync(
+                request.SubscriptionAndDd,
+                "practices/data-conversion/subscription-and-dd");
+
+        practice.DataConversion.InvoicesUrl =
+            await _fileStorageService.UploadAsync(
+                request.Invoices,
+                "practices/data-conversion/invoices");
 
         var createdPractice =
             await _practiceRepository.CreateAsync(practice);
@@ -82,9 +138,10 @@ public class PracticeService : IPracticeService
     }
 
     public async Task<PracticeResponseDto?> UpdateAsync(
-        string id,
-        UpdatePracticeDto request)
+    string id,
+    UpdatePracticeDto request)
     {
+        // Get the existing practice
         var practice =
             await _practiceRepository.GetByIdAsync(id);
 
@@ -93,13 +150,106 @@ public class PracticeService : IPracticeService
             return null;
         }
 
+        // Update text fields only when supplied
         PracticeMapper.UpdatePractice(
             practice,
             request);
 
-        // File replacement/upload handling
-        // will be added with IFileStorageService.
+        // Branding
+        if (request.Logo is not null)
+        {
+            practice.LogoUrl =
+                await _fileStorageService.UploadAsync(
+                    request.Logo,
+                    "practices/logos");
+        }
 
+        if (request.Favicon is not null)
+        {
+            practice.FaviconUrl =
+                await _fileStorageService.UploadAsync(
+                    request.Favicon,
+                    "practices/favicons");
+        }
+
+        // Invoice
+        if (request.InvoiceSample is not null)
+        {
+            practice.InvoiceSampleUrl =
+                await _fileStorageService.UploadAsync(
+                    request.InvoiceSample,
+                    "practices/invoices");
+        }
+
+        // Data conversion files
+        if (request.Contacts is not null)
+        {
+            practice.DataConversion.ContactsUrl =
+                await _fileStorageService.UploadAsync(
+                    request.Contacts,
+                    "practices/data-conversion/contacts");
+        }
+
+        if (request.Users is not null)
+        {
+            practice.DataConversion.UsersUrl =
+                await _fileStorageService.UploadAsync(
+                    request.Users,
+                    "practices/data-conversion/users");
+        }
+
+        if (request.Receipts is not null)
+        {
+            practice.DataConversion.ReceiptsUrl =
+                await _fileStorageService.UploadAsync(
+                    request.Receipts,
+                    "practices/data-conversion/receipts");
+        }
+
+        if (request.Businesses is not null)
+        {
+            practice.DataConversion.BusinessesUrl =
+                await _fileStorageService.UploadAsync(
+                    request.Businesses,
+                    "practices/data-conversion/businesses");
+        }
+
+        if (request.CreditNotes is not null)
+        {
+            practice.DataConversion.CreditNotesUrl =
+                await _fileStorageService.UploadAsync(
+                    request.CreditNotes,
+                    "practices/data-conversion/credit-notes");
+        }
+
+        if (request.Tasks is not null)
+        {
+            practice.DataConversion.TasksUrl =
+                await _fileStorageService.UploadAsync(
+                    request.Tasks,
+                    "practices/data-conversion/tasks");
+        }
+
+        if (request.SubscriptionAndDd is not null)
+        {
+            practice.DataConversion.SubscriptionAndDdUrl =
+                await _fileStorageService.UploadAsync(
+                    request.SubscriptionAndDd,
+                    "practices/data-conversion/subscription-and-dd");
+        }
+
+        if (request.Invoices is not null)
+        {
+            practice.DataConversion.InvoicesUrl =
+                await _fileStorageService.UploadAsync(
+                    request.Invoices,
+                    "practices/data-conversion/invoices");
+        }
+
+        // Update metadata
+        practice.UpdatedAt = DateTime.UtcNow;
+
+        // Save the updated practice
         var updatedPractice =
             await _practiceRepository.UpdateAsync(
                 id,

@@ -6,6 +6,7 @@ import { practiceOnboardingSchema } from "./schemas/practiceOnboarding.schema";
 
 import initialPracticeOnboardingData from "./constants/initialPracticeOnboardingData";
 import type { PracticeOnboardingData } from "./types/practiceOnboarding.types";
+import { createPractice } from "../../api/practiceApi";
 
 import PracticeDetailsStep from "./components/PracticeDetailsStep";
 import BrandingStep from "./components/BrandingStep";
@@ -124,8 +125,14 @@ function OnboardingPage() {
     setCurrentStep((previousStep) => previousStep + 1);
   };
 
-  function onSubmit(data: PracticeOnboardingData) {
-    console.log(data);
+  async function onSubmit(data: PracticeOnboardingData) {
+    try {
+      const response = await createPractice(data);
+
+      console.log("Practice created successfully:", response);
+    } catch (error) {
+      console.error("Failed to create practice:", error);
+    }
   }
 
   return (
