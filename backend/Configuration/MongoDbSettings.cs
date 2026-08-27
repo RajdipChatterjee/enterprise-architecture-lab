@@ -6,4 +6,5 @@ public class MongoDbSettings
     public string Database { get; set; } = null!;
     public string SurveyCollection { get; set; } = null!;
     public string UserCollection { get; set; } = null!;
+    public string PracticeCollection { get; set; } = null!;
 }

@@ -39,6 +39,8 @@ builder.Services.AddSingleton<IMongoClient>(serviceProvider =>
 builder.Services.AddScoped<ISurveyRepository, SurveyRepository>();
 builder.Services.AddScoped<ISurveyService, SurveyService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IPracticeRepository, PracticeRepository>();
+builder.Services.AddScoped<IPracticeService, PracticeService>();
 
 var jwtSettings = builder.Configuration
     .GetSection("JwtSettings")
