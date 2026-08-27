@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, type FieldPath } from "react-hook-form";
 import { makeStyles, tokens, Text } from "@fluentui/react-components";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { practiceOnboardingSchema } from "./schemas/practiceOnboarding.schema";
@@ -69,54 +69,39 @@ function OnboardingPage() {
 
   const [currentStep, setCurrentStep] = useState(1);
 
+  const stepFields: Partial<
+    Record<number, FieldPath<PracticeOnboardingData>[]>
+  > = {
+    1: ["practiceName", "proposedUrl"],
+    2: ["logo", "favicon"],
+    3: [
+      "website",
+      "practicePhoneNumber",
+      "contactPersonName",
+      "contactPersonEmail",
+      "contactPersonPhoneNumber",
+    ],
+    4: ["invoiceSample", "invoiceHeader", "invoiceFooter", "publicEmail"],
+    5: [
+      "dataConversion.contacts",
+      "dataConversion.users",
+      "dataConversion.receipts",
+      "dataConversion.businesses",
+      "dataConversion.creditNotes",
+      "dataConversion.tasks",
+      "dataConversion.subscriptionAndDd",
+      "dataConversion.invoices",
+    ],
+  };
+
   const nextStep = async () => {
-    let fieldsToValidate;
-
-    if (currentStep === 1) {
-      fieldsToValidate = ["practiceName", "proposedUrl"] as const;
-    }
-
-    if (currentStep === 2) {
-      fieldsToValidate = ["logo", "favicon"] as const;
-    }
-
-    if (currentStep === 3) {
-      fieldsToValidate = [
-        "website",
-        "practicePhoneNumber",
-        "contactPersonName",
-        "contactPersonEmail",
-        "contactPersonPhoneNumber",
-      ] as const;
-    }
-
-    if (currentStep === 4) {
-      fieldsToValidate = [
-        "invoiceSample",
-        "invoiceHeader",
-        "invoiceFooter",
-        "publicEmail",
-      ] as const;
-    }
-
-    if (currentStep === 5) {
-      fieldsToValidate = [
-        "dataConversion.contacts",
-        "dataConversion.users",
-        "dataConversion.receipts",
-        "dataConversion.businesses",
-        "dataConversion.creditNotes",
-        "dataConversion.tasks",
-        "dataConversion.subscriptionAndDd",
-        "dataConversion.invoices",
-      ] as const;
-    }
+    const fieldsToValidate = stepFields[currentStep];
 
     if (!fieldsToValidate) {
       return;
     }
 
-    const isValid = await form.trigger(fieldsToValidate as any);
+    const isValid = await form.trigger(fieldsToValidate);
 
     if (!isValid) {
       return;
