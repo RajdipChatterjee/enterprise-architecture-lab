@@ -41,7 +41,9 @@ public class SurveysController : ControllerBase
     public async Task<ActionResult<ApiResponseDto<SurveyResponseDto>>> Create(
     [FromBody] CreateSurveyDto request)
     {
-        var survey = await _surveyService.CreateAsync(request);
+        //var practiceId = Request.Headers["Practice-Id"].ToString();
+        const string practiceId = "000000000000000000000001"; // Replace with actual logic to retrieve practiceId from headers or other sources
+        var survey = await _surveyService.CreateAsync(request, practiceId);
 
         return CreatedAtAction(
             nameof(GetById),

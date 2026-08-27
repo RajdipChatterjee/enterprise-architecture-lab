@@ -17,7 +17,7 @@ public class CreateSurveyDto
     [StringLength(200)]
     public string BusinessName { get; set; } = string.Empty;
 
-    [Range(1, 4)]
+    [Range(1, 5)]
     public int Rating { get; set; }
 
     [Required]

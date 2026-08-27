@@ -44,11 +44,9 @@ public class SurveyService : ISurveyService
     }
 
     public async Task<SurveyResponseDto> CreateAsync(
-        CreateSurveyDto request)
+        CreateSurveyDto request,
+        string practiceId)
     {
-        // Temporary placeholder until authentication and
-        // practice context are implemented.
-        var practiceId = "TODO";
 
         var survey = SurveyMapper.ToSurvey(
             request,

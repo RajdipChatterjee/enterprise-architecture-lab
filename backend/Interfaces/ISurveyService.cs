@@ -7,7 +7,7 @@ public interface ISurveyService
 {
     Task<PaginatedResponseDto<SurveyResponseDto>> GetAllAsync(SurveyFilterDto filter);
     Task<SurveyResponseDto?> GetByIdAsync(string id);
-    Task<SurveyResponseDto> CreateAsync(CreateSurveyDto request);
+    Task<SurveyResponseDto> CreateAsync(CreateSurveyDto request, string practiceId);
     Task<SurveyResponseDto?> UpdateAsync(string id, UpdateSurveyDto request);
     Task<bool> DeleteAsync(string id);
 }

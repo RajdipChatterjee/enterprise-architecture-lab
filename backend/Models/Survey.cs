@@ -37,7 +37,6 @@ public class Survey
 
     // Lifecycle
     [BsonElement("status")]
-    [BsonRepresentation(BsonType.String)]
     public SurveyStatus Status { get; set; }
 
     // Audit
