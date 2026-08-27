@@ -11,14 +11,11 @@ public class CreateSurveyDto
 
     [Required]
     [StringLength(200)]
-    public string BusinessName { get; set; } = string.Empty;
+    public string AccountantName { get; set; } = string.Empty;
 
     [Required]
     [StringLength(200)]
-    public string AccountantName { get; set; } = string.Empty;
-
-    [Range(1, 4)]
-    public SurveyStatus Status { get; set; }
+    public string BusinessName { get; set; } = string.Empty;
 
     [Range(1, 4)]
     public int Rating { get; set; }

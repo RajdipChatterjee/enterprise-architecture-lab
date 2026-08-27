@@ -1,4 +1,5 @@
-﻿using backend.Configuration;
+using System.Text.RegularExpressions;
+using backend.Configuration;
 using backend.DTOs;
 using backend.DTOs.Survey;
 using backend.Interfaces;
@@ -50,7 +51,7 @@ public class SurveyRepository : ISurveyRepository
             mongoFilter &= filterBuilder.Regex(
                 x => x.UserName,
                 new BsonRegularExpression(
-                    filter.UserName,
+                    Regex.Escape(filter.UserName),
                     "i"));
         }
 
@@ -60,7 +61,7 @@ public class SurveyRepository : ISurveyRepository
             mongoFilter &= filterBuilder.Regex(
                 x => x.AccountantName,
                 new BsonRegularExpression(
-                    filter.AccountantName,
+                    Regex.Escape(filter.AccountantName),
                     "i"));
         }
 
@@ -70,7 +71,7 @@ public class SurveyRepository : ISurveyRepository
             mongoFilter &= filterBuilder.Regex(
                 x => x.BusinessName,
                 new BsonRegularExpression(
-                    filter.BusinessName,
+                    Regex.Escape(filter.BusinessName),
                     "i"));
         }
 
@@ -78,7 +79,7 @@ public class SurveyRepository : ISurveyRepository
         if (!string.IsNullOrWhiteSpace(filter.Search))
         {
             var searchRegex = new BsonRegularExpression(
-                filter.Search,
+                Regex.Escape(filter.Search),
                 "i");
 
             var searchFilter = filterBuilder.Or(
@@ -130,9 +131,28 @@ public class SurveyRepository : ISurveyRepository
         // Sorting
         var sortBuilder = Builders<Survey>.Sort;
 
-        var sort = filter.SortDescending
-            ? sortBuilder.Descending(filter.SortBy)
-            : sortBuilder.Ascending(filter.SortBy);
+        var sort = filter.SortBy switch
+        {
+            "rating" => filter.SortDescending
+                ? sortBuilder.Descending(x => x.Rating)
+                : sortBuilder.Ascending(x => x.Rating),
+
+            "username" => filter.SortDescending
+                ? sortBuilder.Descending(x => x.UserName)
+                : sortBuilder.Ascending(x => x.UserName),
+
+            "accountantName" => filter.SortDescending
+                ? sortBuilder.Descending(x => x.AccountantName)
+                : sortBuilder.Ascending(x => x.AccountantName),
+
+            "businessName" => filter.SortDescending
+                ? sortBuilder.Descending(x => x.BusinessName)
+                : sortBuilder.Ascending(x => x.BusinessName),
+
+            _ => filter.SortDescending
+                ? sortBuilder.Descending(x => x.CreatedAt)
+                : sortBuilder.Ascending(x => x.CreatedAt)
+        };
 
         // Count
         var totalCount = await _surveys.CountDocumentsAsync(

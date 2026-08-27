@@ -10,19 +10,21 @@ The domain model is based on the requirements identified so far and may evolve a
 
 The current working model is:
 
-Acting Office Platform
-        │
-        └── Practices
-                │
-                ├── Users
-                ├── Subscription
-                ├── Businesses
-                ├── Contacts
-                ├── Invoices
-                ├── Receipts
-                ├── Credit Notes
-                ├── Tasks
-                └── Other Practice Data
+User
+ │
+ └── Membership / Access
+          │
+          ▼
+       Practice
+          │
+          ├── Surveys
+          ├── Businesses
+          ├── Contacts
+          ├── Invoices
+          ├── Receipts
+          ├── Credit Notes
+          ├── Tasks
+          └── Other Practice Data
 
 ---
 
@@ -130,6 +132,70 @@ The exact subscription model will be implemented after business requirements are
 
 ---
 
+# Survey
+
+A Survey represents feedback, ratings, and associated context collected within a Practice.
+
+## Conceptual Structure
+
+Survey fields are logically grouped into the following conceptual categories:
+
+Survey
+├── Identity
+│   └── Id
+├── Ownership
+│   └── PracticeId
+├── Survey Content
+│   ├── Rating
+│   └── Feedback
+├── Survey Context
+│   ├── UserName
+│   ├── AccountantName
+│   └── BusinessName
+├── Status
+│   └── Status
+└── Lifecycle / Audit
+    ├── CreatedAt
+    ├── IsDeleted
+    └── DeletedAt
+
+---
+
+## Architectural Reasoning & Design Decisions
+
+### 1. Practice as Ownership & Tenant Boundary
+
+- A Survey belongs to a Practice (`PracticeId`).
+- `PracticeId` represents ownership and the primary tenant context.
+- Future survey queries and operations will eventually be scoped to a specific Practice to enforce tenant isolation.
+
+### 2. Separation of Feedback Submitter (`UserName`) from Application `User`
+
+- `UserName` captures the name of the person submitting the survey feedback.
+- **Do NOT automatically add `UserId` to Survey**: The person submitting feedback is not necessarily an authenticated application user.
+- Feedback submitters may be external respondents or clients without application accounts. Prematurely coupling Survey to the internal application `User` entity via `UserId` is avoided.
+
+### 3. Business Context (`BusinessName`) vs. Entity Relationship (`BusinessId`)
+
+- `BusinessName` currently exists as survey context to identify the business referenced in feedback.
+- In the future, when a `Business` entity exists under a Practice, a `BusinessId` relationship may be introduced.
+- However, `BusinessName` will remain valuable as snapshot/historical context even if a `BusinessId` is added later.
+- `BusinessId` is **not** implemented now and remains purely architectural planning.
+
+### 4. Data Consistency & MongoDB Enum Serialization
+
+- `SurveyStatus` is stored consistently in MongoDB as a string representation.
+- String serialization maintains data readability in MongoDB, guards against enum integer reordering issues, and enforces model/data consistency.
+
+---
+
+## Backward Compatibility & Legacy Data Considerations
+
+- **Current Implementation vs. Future Direction**: Existing MongoDB Survey documents may not yet contain a `PracticeId` field.
+- **Future Migration Consideration**: Before making `PracticeId` mandatory in all queries and filters, migration or backward compatibility strategies must be evaluated so existing legacy records remain accessible and intact.
+
+---
+
 # Current User Flow
 
 The current expected flow is:
@@ -162,5 +228,8 @@ Practice
 
 Subscription
     = Plan and feature/usage limits
+
+Survey Submitter (UserName)
+    = Person submitting survey feedback (not coupled to User account)
 
 The relationships between these entities may evolve as the application requirements become clearer.

@@ -18,7 +18,7 @@ public class SurveysController : ControllerBase
 
     // GET: api/surveys?page=1&pageSize=15&status=Active
     [HttpGet]
-    public async Task<ActionResult<ApiResponseDto<List<SurveyResponseDto>>>> GetAll([FromQuery] SurveyFilterDto filter)
+    public async Task<ActionResult<ApiResponseDto<PaginatedResponseDto<SurveyResponseDto>>>> GetAll([FromQuery] SurveyFilterDto filter)
     {
         var result = await _surveyService.GetAllAsync(filter);
 
@@ -38,11 +38,14 @@ public class SurveysController : ControllerBase
 
     // POST: api/surveys
     [HttpPost]
-    public async Task<ActionResult<ApiResponseDto<string>>> Create([FromBody] CreateSurveyDto request)
+    public async Task<ActionResult<ApiResponseDto<SurveyResponseDto>>> Create(
+    [FromBody] CreateSurveyDto request)
     {
         var survey = await _surveyService.CreateAsync(request);
 
-        return CreatedAtAction(nameof(GetById), new { id = survey.Id },
+        return CreatedAtAction(
+            nameof(GetById),
+            new { id = survey.Id },
             new ApiResponseDto<SurveyResponseDto>(
                 true,
                 "Survey created successfully",
@@ -53,7 +56,9 @@ public class SurveysController : ControllerBase
 
     // PUT: api/surveys/{id}
     [HttpPut("{id}")]
-    public async Task<ActionResult<ApiResponseDto<string>>> Update(string id, [FromBody] UpdateSurveyDto request)
+    public async Task<ActionResult<ApiResponseDto<SurveyResponseDto>>> Update(
+    string id,
+    [FromBody] UpdateSurveyDto request)
     {
         var survey = await _surveyService.UpdateAsync(id, request);
 
@@ -79,9 +84,9 @@ public class SurveysController : ControllerBase
     // DELETE: api/surveys/{id}
     // Soft delete
     [HttpDelete("{id}")]
-    public async Task<ActionResult<ApiResponseDto<string>>> Delete(string id)
+    public async Task<ActionResult<ApiResponseDto<object>>> Delete(string id)
     {
-     
+
         var deleted = await _surveyService.DeleteAsync(id);
 
         if (!deleted) return NotFound(new ApiResponseDto<object>(false, "Survey not found"));

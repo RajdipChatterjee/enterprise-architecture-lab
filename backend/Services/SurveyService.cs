@@ -1,7 +1,7 @@
 ﻿using backend.DTOs;
 using backend.DTOs.Survey;
 using backend.Interfaces;
-using backend.Models;
+using backend.Mapper;
 
 namespace backend.Services;
 
@@ -21,7 +21,10 @@ public class SurveyService : ISurveyService
 
         return new PaginatedResponseDto<SurveyResponseDto>
         {
-            Items = result.Items.Select(MapToResponseDto).ToList(),
+            Items = result.Items
+                .Select(SurveyMapper.ToDto)
+                .ToList(),
+
             TotalCount = result.TotalCount,
             Page = result.Page,
             PageSize = result.PageSize
@@ -32,73 +35,60 @@ public class SurveyService : ISurveyService
     {
         var survey = await _surveyRepository.GetByIdAsync(id);
 
-        if (survey == null)
+        if (survey is null)
+        {
             return null;
+        }
 
-        return MapToResponseDto(survey);
+        return SurveyMapper.ToDto(survey);
     }
 
     public async Task<SurveyResponseDto> CreateAsync(
         CreateSurveyDto request)
     {
-        var survey = new Survey
-        {
-            Rating = request.Rating,
-            Feedback = request.Feedback,
-            UserName = request.UserName,
-            AccountantName = request.AccountantName,
-            BusinessName = request.BusinessName,
-            Status = request.Status,
-            CreatedAt = DateTime.UtcNow,
-            IsDeleted = false
-        };
+        // Temporary placeholder until authentication and
+        // practice context are implemented.
+        var practiceId = "TODO";
+
+        var survey = SurveyMapper.ToSurvey(
+            request,
+            practiceId
+        );
 
         var createdSurvey =
             await _surveyRepository.CreateAsync(survey);
 
-        return MapToResponseDto(createdSurvey);
+        return SurveyMapper.ToDto(createdSurvey);
     }
 
     public async Task<SurveyResponseDto?> UpdateAsync(
         string id,
         UpdateSurveyDto request)
     {
-        var survey = new Survey
+        // First get the existing survey
+        var survey = await _surveyRepository.GetByIdAsync(id);
+
+        if (survey is null)
         {
-            Rating = request.Rating,
-            Feedback = request.Feedback,
-            UserName = request.UserName,
-            AccountantName = request.AccountantName,
-            BusinessName = request.BusinessName,
-            Status = request.Status
-        };
+            return null;
+        }
+
+        // Apply only fields supplied in the DTO
+        SurveyMapper.UpdateSurvey(survey, request);
 
         var updatedSurvey =
             await _surveyRepository.UpdateAsync(id, survey);
 
-        if (updatedSurvey == null)
+        if (updatedSurvey is null)
+        {
             return null;
+        }
 
-        return MapToResponseDto(updatedSurvey);
+        return SurveyMapper.ToDto(updatedSurvey);
     }
 
     public async Task<bool> DeleteAsync(string id)
     {
         return await _surveyRepository.SoftDeleteAsync(id);
-    }
-
-    private static SurveyResponseDto MapToResponseDto(Survey survey)
-    {
-        return new SurveyResponseDto
-        {
-            Id = survey.Id,
-            Rating = survey.Rating,
-            Feedback = survey.Feedback,
-            UserName = survey.UserName,
-            AccountantName = survey.AccountantName,
-            BusinessName = survey.BusinessName,
-            Status = survey.Status,
-            CreatedAt = survey.CreatedAt
-        };
     }
 }

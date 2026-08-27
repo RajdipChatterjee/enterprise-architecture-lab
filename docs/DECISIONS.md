@@ -68,3 +68,17 @@ An unauthenticated visitor already has no authenticated identity and can be hand
 Roles are only stored for authenticated users.
 
 The initial role structure is intentionally simple and can be expanded later based on actual application requirements.
+
+---
+
+## Survey Status Serialization
+
+### Decision
+
+`SurveyStatus` enum values stored in MongoDB will consistently use string representations (`[BsonRepresentation(BsonType.String)]`) rather than numeric integers.
+
+### Reason
+
+1. **Readability**: MongoDB documents store explicit human-readable string values (e.g. `"Active"`, `"Draft"`, `"Completed"`) instead of raw integer codes (`0`, `1`, `2`).
+2. **Safety against Enum Changes**: Adding new values or reordering values in the C# `SurveyStatus` enum definition will not break or corrupt existing database records.
+3. **Model & Serialization Consistency**: Enforces a predictable string contract across MongoDB persistence, application services, and API responses.

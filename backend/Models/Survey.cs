@@ -8,16 +8,24 @@ namespace backend.Models;
 [BsonIgnoreExtraElements]
 public class Survey
 {
+    // Identity
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; } = null!;
 
+    // Ownership
+    [BsonElement("practiceId")]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string PracticeId { get; set; } = null!;
+
+    // Survey Content
     [BsonElement("rating")]
     public int Rating { get; set; }
 
     [BsonElement("feedback")]
     public string Feedback { get; set; } = string.Empty;
 
+    // Survey Context
     [BsonElement("username")]
     public string UserName { get; set; } = string.Empty;
 
@@ -27,10 +35,12 @@ public class Survey
     [BsonElement("businessName")]
     public string BusinessName { get; set; } = string.Empty;
 
-    //[BsonRepresentation(BsonType.String)]
+    // Lifecycle
     [BsonElement("status")]
+    [BsonRepresentation(BsonType.String)]
     public SurveyStatus Status { get; set; }
 
+    // Audit
     [BsonElement("createdAt")]
     [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
