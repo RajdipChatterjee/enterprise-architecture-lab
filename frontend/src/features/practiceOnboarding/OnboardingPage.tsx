@@ -16,6 +16,12 @@ import DataConversionStep from "./components/DataConversionStep";
 import ReviewStep from "./components/ReviewStep";
 import OnboardingStepper from "./components/OnboardingStepper";
 
+type SubmissionStatus = 
+| "idle"
+| "submitting"
+| "success"
+| "error"
+
 const useStyles = makeStyles({
   pageContainer: {
     maxWidth: "880px",
@@ -68,6 +74,7 @@ function OnboardingPage() {
   });
 
   const [currentStep, setCurrentStep] = useState(1);
+  const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>("idle");
 
   const stepFields: Partial<
     Record<number, FieldPath<PracticeOnboardingData>[]>
