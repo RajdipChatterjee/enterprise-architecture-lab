@@ -1,16 +1,23 @@
-FROM mcr.microsoft.com/dotnet/sdk:10.0
+# Stage 0: Build Phase
+
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 
 WORKDIR /app
+
+COPY backend.csproj .
+
+RUN dotnet restore
 
 COPY . .
 
 RUN dotnet publish -c Release -o /publish
 
+# Stage 1: Runtime Phase
 
-FROM mcr.microsoft.com/dotnet/aspnet:10.0
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 
 WORKDIR /app
 
-COPY --from=0 /publish .
+COPY --from=build /publish .
 
-ENTRYPOINT ["dotnet", "backend.dll"]
+CMD ["dotnet", "backend.dll"]
